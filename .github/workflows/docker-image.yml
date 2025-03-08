@@ -56,14 +56,21 @@ jobs:
         tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.FRONTEND_IMAGE }}:latest
         labels: ${{ steps.meta.outputs.labels }}
 
+    - name: Install Docker Compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+        docker-compose --version
+
     - name: Update docker-compose.yml for GitHub Container Registry
       run: |
         sed -i "s|gangadharrr/pdf-unlocker-backend|${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.BACKEND_IMAGE }}|g" docker-compose.yml
         sed -i "s|gangadharrr/pdf-unlocker-frontend|${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.FRONTEND_IMAGE }}|g" docker-compose.yml
+        cat docker-compose.yml
 
     - name: Start application
       run: |
-        docker-compose up -d
+        sudo docker-compose up -d
         echo "Waiting for services to start..."
         sleep 30
 
