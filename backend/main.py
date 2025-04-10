@@ -23,8 +23,8 @@ app.add_middleware(
 )
 
 # Create directories if they don't exist
-UPLOAD_DIR = Path("uploads")
-OUTPUT_DIR = Path("outputs")
+UPLOAD_DIR = Path(os.getcwd(), "uploads")
+OUTPUT_DIR = Path(os.getcwd(), "outputs")
 UPLOAD_DIR.mkdir(exist_ok=True)
 OUTPUT_DIR.mkdir(exist_ok=True)
 
