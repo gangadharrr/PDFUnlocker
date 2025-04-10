@@ -10,7 +10,13 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
+import { config } from './config';
 import axios from 'axios';
+
+// Create axios instance with base URL from config
+const api = axios.create({
+  baseURL: config.apiUrl
+});
 
 function App() {
   const [file, setFile] = useState(null);
@@ -73,8 +79,8 @@ function App() {
     setLoading(true);
 
     try {
-      // Use relative URL that works on both desktop and mobile
-      const response = await axios.post('/upload', formData, {
+      // Use configured API with relative endpoint
+      const response = await api.post('/upload', formData, {
         responseType: 'blob',
         headers: {
           'Accept': 'application/pdf'

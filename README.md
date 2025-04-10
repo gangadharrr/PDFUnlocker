@@ -82,6 +82,25 @@ npm install
 npm start
 ```
 
+### API URL Configuration
+
+The frontend can be configured to connect to different backend API URLs using environment variables:
+
+1. For development, create or modify `frontend/.env` file:
+   ```
+   REACT_APP_API_URL=http://localhost:8000
+   ```
+
+2. For production with relative URLs (same domain), use an empty value in `frontend/.env.production`:
+   ```
+   REACT_APP_API_URL=
+   ```
+
+3. For production with a specific API domain:
+   ```
+   REACT_APP_API_URL=https://api.example.com
+   ```
+
 ### Backend Development
 
 ```bash
