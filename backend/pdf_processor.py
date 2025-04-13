@@ -1,5 +1,7 @@
 from PyPDF2 import PdfReader, PdfWriter
 import logging
+from typing import Union, BinaryIO, IO
+from io import BytesIO
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -8,15 +10,24 @@ class PDFError(Exception):
     """Custom exception for PDF processing errors"""
     pass
 
-def unlock_pdf(input_path: str, output_path: str, password: str) -> tuple[bool, str]:
+def unlock_pdf(input_source: Union[str, BytesIO, BinaryIO], 
+               output_dest: Union[str, BytesIO, BinaryIO], 
+               password: str) -> tuple[bool, str]:
     """
     Unlock a PDF file using the provided password.
-    Returns a tuple of (success: bool, error_message: str)
+    
+    Args:
+        input_source: Either a file path string or a BytesIO/file-like object containing the PDF
+        output_dest: Either a file path string or a BytesIO/file-like object to write the unlocked PDF to
+        password: The password to unlock the PDF
+        
+    Returns:
+        tuple[bool, str]: (success, error_message)
     """
     try:
         # Create PDF reader object
-        logger.info(f"Opening PDF file: {input_path}")
-        reader = PdfReader(input_path)
+        logger.info("Opening PDF file")
+        reader = PdfReader(input_source)
         
         # Check if PDF is encrypted
         if reader.is_encrypted:
@@ -44,10 +55,16 @@ def unlock_pdf(input_path: str, output_path: str, password: str) -> tuple[bool, 
             for page in reader.pages:
                 writer.add_page(page)
             
-            # Write decrypted PDF to output file
-            logger.info(f"Writing unlocked PDF to: {output_path}")
-            with open(output_path, 'wb') as output_file:
-                writer.write(output_file)
+            # Write decrypted PDF to output destination
+            logger.info("Writing unlocked PDF")
+            
+            # If output_dest is a string (file path), open it and write
+            if isinstance(output_dest, str):
+                with open(output_dest, 'wb') as output_file:
+                    writer.write(output_file)
+            # If output_dest is already a file-like object, write directly
+            else:
+                writer.write(output_dest)
                 
             return True, ""
             
@@ -57,7 +74,7 @@ def unlock_pdf(input_path: str, output_path: str, password: str) -> tuple[bool, 
             return False, error_msg
             
     except FileNotFoundError:
-        error_msg = f"PDF file not found: {input_path}"
+        error_msg = "PDF file not found"
         logger.error(error_msg)
         return False, error_msg
     except Exception as e:
