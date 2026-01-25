@@ -2,6 +2,7 @@ import fastifyCors from "@fastify/cors";
 import fastify, { FastifyError, FastifyInstance } from "fastify";
 import { env } from "./configs/env.config";
 import { loggerConfig } from "./configs/logger.config";
+import { registerAppRoutes } from "./app-router";
 
 function buildApp(): FastifyInstance {
   const app = fastify({ logger: loggerConfig });
@@ -24,7 +25,8 @@ function buildApp(): FastifyInstance {
       message: error.message || 'Internal Server Error',
     });
   });
-
+  
+  registerAppRoutes(app);
   return app;
 }
 
