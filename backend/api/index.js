@@ -1,6 +1,5 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   try {
     // Dynamically import the app to catch any module loading errors
     const appModule = await import('../dist/app.js');
@@ -10,22 +9,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ? appModule.default.default
       : appModule.default || appModule;
 
-    await (app as any).ready();
+    await app.ready();
 
-    const response = await (app as any).inject({
-      method: (req.method || 'GET') as any,
+    const response = await (app).inject({
+      method: (req.method || 'GET'),
       url: req.url || '/',
-      headers: req.headers as Record<string, string | string[]>,
+      headers: req.headers,
       payload: req.body,
     });
 
     // Set response headers
-    Object.entries(response.headers).forEach(([key, value]: [string, any]) => {
+    Object.entries(response.headers).forEach(([key, value]) => {
       res.setHeader(key, value);
     });
 
-    res.status((response as any).statusCode).send((response as any).body);
-  } catch (error: any) {
+    res.status(response.statusCode).send(response.body);
+  } catch (error) {
     console.error('Error handling request:', error);
     console.error('Error stack:', error?.stack);
     console.error('Error message:', error?.message);
