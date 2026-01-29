@@ -1,7 +1,12 @@
 import { env } from "./env.config";
 
-export const loggerConfig = {
-			// Local development only: pretty-printed logs with colors
+export const loggerConfig = env.VERCEL
+	? {
+			// Serverless: simple JSON logs
+			level: env.LOG_LEVEL,
+	  }
+	: {
+			// Local development: pretty-printed logs with colors
 			level: env.LOG_LEVEL,
 			transport: {
 				targets: [
@@ -24,4 +29,4 @@ export const loggerConfig = {
 					},
 				],
 			},
-		}
+	  };
