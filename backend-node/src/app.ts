@@ -3,18 +3,23 @@ import fastify, { FastifyError, FastifyInstance } from "fastify";
 import { env } from "./configs/env.config";
 import { loggerConfig } from "./configs/logger.config";
 import { registerAppRoutes } from "./app-router";
+import fastifyMultipart from "@fastify/multipart";
 
 function buildApp(): FastifyInstance {
   const app = fastify({ logger: loggerConfig });
-  app.register(fastifyCors,{
-		origin: env.CORS_ORIGINS,
-		methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  app.register(fastifyCors, {
+    origin: env.CORS_ORIGINS,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
+  });
+
+  app.register(fastifyMultipart, {
+    attachFieldsToBody: 'keyValues'
   });
 
   app.setNotFoundHandler((_, reply) => {
     reply.code(404).send({
-      message: 'Resource not found',
+      message: "Resource not found",
     });
   });
 
@@ -22,10 +27,10 @@ function buildApp(): FastifyInstance {
     app.log.error(error);
     const statusCode = error.statusCode ?? 500;
     reply.code(statusCode).send({
-      message: error.message || 'Internal Server Error',
+      message: error.message || "Internal Server Error",
     });
   });
-  
+
   registerAppRoutes(app);
   return app;
 }

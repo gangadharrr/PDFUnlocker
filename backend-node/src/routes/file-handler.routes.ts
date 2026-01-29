@@ -1,6 +1,13 @@
-export function registerFileHandlerRoutes(app: any) {
-    app.post('/upload', (_: any, res: any) => {
-        // Handle file upload
-        res.send('File uploaded successfully');
+import { FastifyInstance } from "fastify";
+import { FileHandlerController } from "../controllers/file-handler.controller";
+import { createValidatorPlugin, ValidateLocation } from "../middlewares/validation.middleware";
+import { FileUploadSchema } from "../schemas/file-handler.schema";
+
+export function registerFileHandlerRoutes(app: FastifyInstance) {
+    app.route({
+      method: "POST",
+      url: '/upload', 
+      preHandler: [createValidatorPlugin(ValidateLocation.BODY, FileUploadSchema)],
+      handler: FileHandlerController.uploadFile
     });
 }
