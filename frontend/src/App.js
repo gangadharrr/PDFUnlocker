@@ -15,7 +15,7 @@ import axios from 'axios';
 
 // Create axios instance with base URL from config
 const api = axios.create({
-  baseURL: config.apiUrl
+  baseURL: config.apiUrl,
 });
 
 function App() {
@@ -80,7 +80,7 @@ function App() {
 
     try {
       // Use configured API with relative endpoint
-      const response = await api.post('/upload', formData, {
+      const response = await api.post('/api/v1/unlock', formData, {
         responseType: 'blob',
         headers: {
           'Accept': 'application/pdf'
