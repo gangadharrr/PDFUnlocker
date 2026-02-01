@@ -4,7 +4,7 @@ import app from '../app';
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     await app.ready();
-    const response = await (app as any).inject({
+    const response = await app.inject({
       method: (req.method || 'GET') as any,
       url: req.url || '/',
       headers: req.headers as Record<string, string | string[]>,

@@ -10,7 +10,7 @@ const EnvSchema = z.object({
   LOG_LEVEL: z.string().default('info'),
   LOGS_PATH: z.string().default('./logs/app.log'),
   CORS_ORIGINS: z.string().default('http://localhost:3000'),
-  VERCEL: z.coerce.boolean().default(true),
+  VERCEL: z.string().transform((val) => val === 'true').default(true),
 });
 
 export const env = validatePayloadWithZod(
