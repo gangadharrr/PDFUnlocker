@@ -50,4 +50,4 @@ async def health_check():
 
 @app.get("/")
 async def health_check():
-    return '<H1>PDF Unlocker Service is Running</H1>'
+    return '<html><body><h1>PDF Unlocker Service is Running</h1></body></html>'
