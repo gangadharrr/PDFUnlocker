@@ -1,6 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response
+from fastapi.responses import Response, HTMLResponse
 import io
 from pdf_processor import unlock_pdf, PDFError
 
@@ -48,6 +48,6 @@ async def upload_pdf(file: UploadFile = File(...), password: str = Form(...)):
 async def health_check():
     return {"status": "healthy"}
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 async def health_check():
     return '<html><body><h1>PDF Unlocker Service is Running</h1></body></html>'
