@@ -10,4 +10,10 @@ export function registerAppRoutes(app: FastifyInstance) {
       app.register(route, { prefix: routePrimaryPrefix });
     }
   });
+
+  app.get("/", async (_, reply) => {
+    reply.send({
+      message: "Welcome to the PDF Unlocker API",
+    });
+  });
 }
