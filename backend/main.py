@@ -14,7 +14,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/upload")
+@app.post("/api/v1/unlock")
 async def upload_pdf(file: UploadFile = File(...), password: str = Form(...)):
     if not file.filename.lower().endswith('.pdf'):
         raise HTTPException(status_code=400, detail="File must be a PDF")
@@ -44,6 +44,10 @@ async def upload_pdf(file: UploadFile = File(...), password: str = Form(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
-@app.get("/health")
+@app.get("/api/v1/health")
 async def health_check():
     return {"status": "healthy"}
+
+@app.get("/")
+async def health_check():
+    return '<H1>PDF Unlocker Service is Running</H1>'
